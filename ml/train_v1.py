@@ -1,4 +1,8 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import RocCurveDisplay
+from sklearn.metrics import ConfusionMatrixDisplay
+
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -146,3 +150,43 @@ predictions = model.predict(X_test_scaled)
 
 print("Predictions:", predictions.shape)
 print("First 10 predictions:", predictions[:10])
+
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+    roc_auc_score
+)
+
+# Model evaluation
+accuracy = accuracy_score(y_test, predictions)
+precision = precision_score(y_test, predictions)
+recall = recall_score(y_test, predictions)
+f1 = f1_score(y_test, predictions)
+
+print("\nModel Evaluation")
+print("----------------")
+print("Accuracy :", accuracy)
+print("Precision:", precision)
+print("Recall   :", recall)
+print("F1 Score :", f1)
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, predictions))
+
+# ROC-AUC uses probabilities, not 0/1 predictions
+probabilities = model.predict_proba(X_test_scaled)[:, 1]
+roc_auc = roc_auc_score(y_test, probabilities)
+
+print("\nROC-AUC:", roc_auc)
+
+# ROC Curve
+RocCurveDisplay.from_predictions(y_test, probabilities)
+plt.title("ROC Curve - Logistic Regression V1")
+plt.show()
+
+ConfusionMatrixDisplay.from_predictions(y_test, predictions)
+plt.title("Confusion Matrix - Logistic Regression V1")
+plt.show()
